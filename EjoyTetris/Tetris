@@ -1,0 +1,126 @@
+--lua
+local ej=require "ejoy2d"
+local fw=require "ejoy2d.framework"
+local pack=require "ejoy2d.simplepackage"
+local sprite=require "ejoy2d.sprite"
+local shader=require "ejoy2d.shader.c"
+
+local TG=require "script.TetrisGame"
+local TP=require "script.TetrisPiece"
+
+local TTG=TG:new(o)
+local package,bgName,path_pattern="tetris","tetris_23","../res/?"
+local game_res=pack.load{
+	pattern=path_pattern,
+	package	
+}
+
+local Tetris={  }
+function Tetris:new(b)
+	b=b or { }
+	b.ifPause=false
+	b.GameOver=false
+	--create label
+	b.LEFT=sprite.label{ width=60,height=20,size=20,text="←"}
+	b.RIGHT=sprite.label{ width=60,height=20,size=20,text="→"}
+	b.ROTATE=sprite.label{ width=60,height=20,size=20,text="↑"}
+	b.DOWN=sprite.label{ width=60,height=20,size=20,text="↓"}
+	b.PAUSE=sprite.label{ width=80,height=20,size=20,text="暂停游戏"}
+	b.RETURN=sprite.label{ width=80,height=20,size=20,text="返回游戏"}
+	b.NEWGAME=sprite.label{ width=80,height=20,size=20,text="重新开始"}
+	b.GAMEOVER=sprite.label{ width=200,height=20,size=40,text="游 戏 结 束"}
+
+	b.LEFT:ps(80,300)
+	b.RIGHT:ps(180,300)
+	b.ROTATE:ps(130,250)
+	b.DOWN:ps(130,350)
+
+	b.RETURN:ps(640,300)
+	b.NEWGAME:ps(640,330)
+	b.GAMEOVER:ps(325,300)
+	setmetatable(b,self)
+	self.__index = self
+	return b
+end
+
+local Game=Tetris:new(b)
+
+function Tetris.touch(what,x,y,id)
+	if what=="BEGIN" then
+		if Game.LEFT:test(x,y) then
+			TTG:leftShift()
+		end
+		if Game.RIGHT:test(x,y) then
+			TTG:rightShift()
+		end
+		if Game.ROTATE:test(x,y) then
+			TTG:rotate()
+		end
+		if Game.DOWN:test(x,y) then
+			TTG:downShift()
+		end
+		if Game.GameOver==false then
+			if Game.PAUSE:test(x,y) then
+				if Game.PAUSE.text=="暂停游戏" then
+					Game.PAUSE.text="返回游戏"
+					Game.ifPause=true
+				else
+					Game.PAUSE.text="暂停游戏"
+					Game.ifPause=false
+				end
+			end
+		end
+		if Game.NEWGAME:test(x,y) then
+			TTG:newGame()
+			Game.PAUSE.text="暂停游戏"
+			Game.GameOver=false
+			Game.ifPause=false
+		end
+	end	
+end
+
+GameBG=ej.sprite(package,bgName)
+GameBG:ps(500,400)
+
+function Tetris:drawframe()
+	shader.clear(0)
+	GameBG:draw()
+	Game.LEFT:draw()
+	Game.RIGHT:draw()
+	Game.ROTATE:draw()
+	Game.DOWN:draw()
+	Game.NEWGAME:draw()
+	if Game.ifPause==false then
+		if Game.GameOver==true then
+			TTG:GameOver()
+			Game.GAMEOVER:draw()
+		end
+		if Game.GameOver==false then
+			Game.GameOver=TTG:step(Game.GameOver)
+			Game.PAUSE:ps(640,300)
+			Game.PAUSE:draw()
+		end
+	end
+	if Game.ifPause==true then
+		Game.PAUSE:ps(640,300)
+		Game.PAUSE:draw()
+		TTG:Pause()
+	end
+end
+
+function Tetris:update(...)
+
+end
+
+function Tetris:message(...)
+
+end
+function Tetris:handle_error(...)
+
+end
+
+function Tetris:resume(...)
+
+end
+
+ej.start(Game)
