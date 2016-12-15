@@ -17,5 +17,6 @@ int main(void){
     Foo foo;
     auto c2 = liangsc_toys::bind(&Foo::bar, &foo, 43);
     c2(43);
+    c2();
     return 0;
 }

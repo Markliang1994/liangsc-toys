@@ -24,6 +24,10 @@ namespace liangsc_toys{
         R operator() (Arg a){
             (t_->*f_)(a);
         }
+        R operator() (){
+            std::cout << "call the fucking overload version" << std::endl;
+            (t_->*f_)(a_);
+        }
     };
 
     template <typename R, typename Arg>
