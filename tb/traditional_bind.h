@@ -1,0 +1,8 @@
+//
+// Created by mark on 16-12-16.
+//
+
+#ifndef LIANGSC_TOYS_TRADITIONAL_BIND_H
+#define LIANGSC_TOYS_TRADITIONAL_BIND_H
+
+#endif //LIANGSC_TOYS_TRADITIONAL_BIND_H
