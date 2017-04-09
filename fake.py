@@ -21,8 +21,8 @@ def login():
     brw.find_element_by_id(LOGIN).click()
     sleep(3)
 
-    uname = '2515994843@qq.com'
-    pwd = 'l2515994843'
+    uname = '123456789@qq.com'
+    pwd = 'xxxyyyzzz'
 
     brw.find_element_by_id('username').send_keys(uname)
     sleep(1)
